@@ -5,20 +5,20 @@
 #include "gen_stack.h"
 
 int main(int argc, char **argv) {
-  t_pile *pile = pile_create();
+  t_stack *stack = stack_create();
   void *cur_node;
 
   for (int i = 0; i < argc; i++) {
-    pile_push(pile, argv[i], strlen(argv[i]));
+    stack_push(stack, argv[i], strlen(argv[i]));
   }
 
   printf("Complete\n");
-  cur_node = pile_pull(pile);
+  cur_node = stack_pull(stack);
   while (cur_node != NULL) {
     printf("%s\n", (char*)cur_node);
     free(cur_node);
-    cur_node = pile_pull(pile);
+    cur_node = stack_pull(stack);
   }
 
-  pile_free(pile);
+  stack_free(stack);
 }

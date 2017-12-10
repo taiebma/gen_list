@@ -1,6 +1,6 @@
 /**************************
 * Module de gestion des liste chainees
-* Fichier : mtpile.c
+* Fichier : gen_stack.c
 * Auteur : Marc TAIEB
 **************************/
 #include <stdio.h>
@@ -10,59 +10,59 @@
 #include "gen_stack.h"
 
 /**********
-* pile_create
-* Create a new pile
-* return : return the new pile
+* stack_create
+* Create a new stack
+* return : return the new stack
 **********/
-t_pile *pile_create() {
-  t_pile *pile = (t_pile*)malloc(sizeof(t_pile));
-  pile->list = lst_create();
-  pile->top_pile = NULL;
-  return pile;
+t_stack *stack_create() {
+  t_stack *stack = (t_stack*)malloc(sizeof(t_stack));
+  stack->list = lst_create();
+  stack->top_stack = NULL;
+  return stack;
 }
 
 /**********
-* pile_free
-* Free the pile
-* pile : pile to free
+* stack_free
+* Free the stack
+* stack : stack to free
 **********/
-void pile_free(t_pile *pile) {
-  lst_free(pile->list);
-  free(pile);
+void stack_free(t_stack *stack) {
+  lst_free(stack->list);
+  free(stack);
 }
 
 /**********
-* pile_push
-* Push an element on the pile
-* pile : pile
+* stack_push
+* Push an element on the stack
+* stack : stack
 * elem : Element to Push
 * size : Size of the element
 * return : return the element
 **********/
-t_node *pile_push(t_pile *pile, void *elem, int size) {
+t_node *stack_push(t_stack *stack, void *elem, int size) {
   if (elem == NULL)
     return NULL;
-  t_node *new_node = lst_add(pile->list, elem, size);
-  pile->top_pile = pile->list->last_node;
+  t_node *new_node = lst_add(stack->list, elem, size);
+  stack->top_stack = stack->list->last_node;
   return new_node;
 }
 
 /**********
-* pile_pull
-* Pull the element on the top of the pile
-* pile : pile
+* stack_pull
+* Pull the element on the top of the stack
+* stack : stack
 * return : return the element
 **********/
-void *pile_pull(t_pile *pile) {
+void *stack_pull(t_stack *stack) {
 
-  if (pile == NULL || pile->top_pile == NULL)
+  if (stack == NULL || stack->top_stack == NULL)
     return NULL;
 
-  t_node *cur_node = pile->top_pile;
+  t_node *cur_node = stack->top_stack;
   void *elem = (void *)malloc(cur_node->size + 1);
   memset(elem, 0, cur_node->size + 1);
   memcpy(elem, cur_node->data, cur_node->size);
-  lst_remove(pile->list, cur_node);
-  pile->top_pile = pile->list->last_node;
+  lst_remove(stack->list, cur_node);
+  stack->top_stack = stack->list->last_node;
   return elem;
 }
