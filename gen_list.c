@@ -29,7 +29,7 @@ t_list *lst_create()
 * size : size of data
 * return : return the new node
 **********/
-t_node *lst_add(t_list *lst, void *data, long size)
+t_node *lst_add(t_list *lst, char *id, void *data, long size)
 {
 
   if (data == NULL || size == 0)
@@ -41,6 +41,8 @@ t_node *lst_add(t_list *lst, void *data, long size)
   memset(node->data, 0, size + 1);
   node->size = size;
   node->next = node->prev = NULL;
+  if (id != NULL)
+    strcpy(node->id, id);
 
   //  Init data
   memcpy(node->data, data, size);
@@ -68,6 +70,37 @@ void lst_remove(t_list *lst, t_node *node)
 {
   if (node == NULL)
     return;
+  if (node->prev != NULL)
+    node->prev->next = node->next;
+  else
+    lst->first_node = node->next;
+  if (node->next != NULL)
+    node->next->prev = node->prev;
+  else
+    lst->last_node = node->prev;
+
+  lst->nb_elem--;
+
+  free(node->data);
+  free(node);
+}
+
+/**********
+* lst_remove_by_id
+* Remove the node of the list
+* lst : list
+* id : id of node to remove
+**********/
+void lst_remove_by_id(t_list *lst, char *id)
+{
+  t_node *node;
+
+  if (id == NULL)
+    return;
+
+  if ((node = lst_search_by_id(lst, id)) == NULL)
+    return ;
+
   if (node->prev != NULL)
     node->prev->next = node->next;
   else
@@ -171,6 +204,28 @@ t_node *lst_search(t_list *lst, void *elem_search, int (fct_cmp)(void *a, void *
 }
 
 /**********
+* lst_search_by_id
+* Return the element to search and seek the current position to this node
+* lst : list
+* elem_search : element to lst_search
+* fct_cmp : function use to compare data
+* return : element found or null if not found
+**********/
+t_node *lst_search_by_id(t_list *lst, char *id)
+{
+  t_node *cur_elem = lst->first_node;
+
+  while (cur_elem != NULL && strcmp(cur_elem->id, id) != 0) {
+    cur_elem = cur_elem->next;
+  }
+
+  if (cur_elem != NULL)
+    lst->cur_node = cur_elem;
+
+  return cur_elem;
+}
+
+/**********
 * free_list
 * Free the list and datas
 **********/
@@ -200,7 +255,7 @@ void lst_switch(t_list *lst, t_node *node1, t_node *node2)
 {
   t_node node_save;
 
-  if (lst_count(lst) == 0)
+  if (lst_count(lst) == 0 || node1 == node2)
     return;
 
   if (lst->first_node == node1)
@@ -218,6 +273,7 @@ void lst_switch(t_list *lst, t_node *node1, t_node *node2)
 
   node_save.next = node1->next;
   node_save.prev = node1->prev;
+  //  Case of node between node1 and node2
   if (node1->next != NULL && node1->next != node2)
     node1->next->prev = node2;
   if (node1->prev != NULL && node1->prev != node2)
@@ -226,16 +282,27 @@ void lst_switch(t_list *lst, t_node *node1, t_node *node2)
     node2->next->prev = node1;
   if (node2->prev != NULL && node2->prev != node1)
     node2->prev->next = node1;
-  node1->next = node2->next;
+  
+  //  Update nodes link
+  if (node1->prev == node2)
+    node1->next = node2;
+  else
+    node1->next = node2->next;
+
   if (node_save.next == node2)
     node1->prev = node2;
   else
     node1->prev = node2->prev;
+
   if (node2->prev == node1)
     node2->next = node1;
   else
     node2->next = node_save.next;
-  node2->prev = node_save.prev;
+    
+  if (node_save.prev == node2)
+    node2->prev = node1;
+  else
+    node2->prev = node_save.prev;
 }
 
 /**********

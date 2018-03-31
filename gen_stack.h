@@ -38,6 +38,17 @@ void stack_free(t_stack *stack);
 t_node *stack_push(t_stack *stack, void *elem, int size);
 
 /**********
+* stack_push
+* Push an element on the stack
+* stack : stack
+* id : id of the element
+* elem : Element to Push
+* size : Size of the element
+* return : return the element
+**********/
+t_node *stack_push2(t_stack *stack, char *id, void *elem, int size);
+
+/**********
 * stack_pull
 * Pull the element on the top of the stack
 * stack : stack

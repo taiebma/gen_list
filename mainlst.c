@@ -35,7 +35,9 @@ int main(int argc, char **argv) {
 
 //  Cas de l'initialisation
   for (int i = 1; i < argc; i++) {
-    lst_add(lst, argv[i], strlen(argv[i]));
+    char sId[10];
+    sprintf(sId, "Id%d", i);
+    lst_add(lst, sId, argv[i], strlen(argv[i]));
   }
 
 //  Cas1
@@ -69,6 +71,7 @@ int main(int argc, char **argv) {
 
 // Cas recherche
   printf("Trouve %d\n", (lst_search(lst, "test", cmp_string) != NULL)? 1: 0);
+  printf("Trouve par id %d\n", (lst_search_by_id(lst, "Id4") != NULL)? 1: 0);
 
   //printf("Next : %s\n", (char *)lst_next(lst)->data);
 

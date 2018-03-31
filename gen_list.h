@@ -6,8 +6,11 @@
 #ifndef __GEN_LIST__
 #define __GEN_LIST__
 
+#define SIZE_MAX_ID 32
+
 typedef struct s_node {
   // Data part
+  char id[SIZE_MAX_ID];
   void *data;
   long size;
 
@@ -34,11 +37,12 @@ t_list *lst_create();
 * lst_add
 * Add a node to the end of the list
 * lst : list
+* id : id of node
 * data : data of the node
 * size : size of data
 * return : return the new node
 **********/
-t_node *lst_add(t_list *lst, void *data, long size);
+t_node *lst_add(t_list *lst, char *id, void *data, long size);
 
 /**********
 * free_list
@@ -53,6 +57,14 @@ void lst_free(t_list *lst);
 * node : node to remove
 **********/
 void lst_remove(t_list *lst, t_node *node);
+
+/**********
+* lst_remove_by_id
+* Remove the node of the list
+* lst : list
+* id : id of node to remove
+**********/
+void lst_remove_by_id(t_list *lst, char *id);
 
 /**********
 * lst_count
@@ -71,6 +83,16 @@ long lst_count(t_list *lst);
 * return : element found or null if not found
 **********/
 t_node *lst_search(t_list *lst, void *elem_search, int (fct_cmp)(void *a, void *b));
+
+/**********
+* lst_search_by_id
+* Return the element to search and seek the current position to this node
+* lst : list
+* elem_search : element to lst_search
+* fct_cmp : function use to compare data
+* return : element found or null if not found
+**********/
+t_node *lst_search_by_id(t_list *lst, char *id);
 
 /**********
 * lst_top
